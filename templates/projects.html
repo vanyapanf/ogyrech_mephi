@@ -1,40 +1,74 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Индекс Еда</title>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ogurech</title>
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/normalize.css">
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/static/css/normalize.css" />
+    <link rel="stylesheet" href="/static/css/style.css" />
 </head>
 <body>
     <header class="header container">
         <a href="/" class="logo">
-            <img width="128" src="img/logo.png" alt="Лого: Ogurech" class="logo-image" />
+          <img
+            width="70"
+            src="/static/img/logo.png"
+            alt="Лого: Ogurech"
+            class="logo-image"
+          />
         </a>
-        <span>
-            Ogurech
-        </span>
-        <div class="auth">
-            <a href="#" class="login">Выйти</a>
+        <span class="company-name"> Ogurech </span>
+        <div class="login">
+          <span class="username">t.testuser</span>
+          <a href="#" class="logout-btn">Выйти</a>
         </div>
-    </header> 
+      </header>
     <aside>
         <a href="#">Проекты</a>
         <a href="#">Админ-панель</a>
         <a href="#">Тест-кейсы</a>
     </aside>
-    <main class="main">
-        
+    <main class="main container">
+        <section class="projects">
+            <h2 class="section-title">Проекты</h2>
+            <div class="projects-content">
+                <div class="project-card">
+                    <h3 class="project-title">Проект_1</h3>
+                </div>
+                <div class="project-card">
+                    <h3 class="project-title">Проект_2</h3>
+                </div>
+            </div>
+        </section>
     </main>
     <footer class="footer">
         
     </footer>
+    <div class="modal create-project">
+        <div class="modal-header">
+            <h3 class="modal-title">Новый проект</h3>
+            <button class="close">&times;</button>
+        </div>
+        <div class="modal-body">
+            <input class="project-name" type="text" placeholder="имя проекта">
+            <input class="project-description" type="text" placeholder="описание проекта">
+        </div>
+        <div class="modal-footer">
+            <button class="button" type="submit">Создать</button>
+        </div>
+    </div>
     <script src="js/main.js"></script>
 </body>
 </html>
