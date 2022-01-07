@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block title %}Проекты{% endblock %}
+
+{% block main %}
+    {% include 'include/side-menu.html' %}
+    <main class="main">
+        <br>
+        <div>
+            <a href="/test/add_project">Создать проект</a>
+        </div>
+        <br>
+        <div class="print">
+            <table class="result-table">
+                <caption>Проекты</caption>
+                <tr>
+                    <td>ID Проекта</td>
+                    <td>Название</td>
+                    <td></td>
+                </tr>
+                {% for project in projects %}
+                    <tr>
+                        <td  class="project">
+                            {{ project.id }}
+                        </td>
+                        <td>{{ project.name }}</td>
+                        <td><a href="/test/project/{{ project.id }}">Посмотреть релизы</a><br></td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </main>
+{% endblock %}

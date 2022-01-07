@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block title %}Огурэц{% endblock %}
+{% block user %}
+    <div class="auth">
+        <a href="{% url 'login' %}" class="login">Войти</a>
+    </div>
+{% endblock %}
+{% block main %}
+    <main class="main">
+        <p>Лучшая система по сопровождению тестирования ПО. С нами работают лучшие. Наши клиенты - Яндекс, Гугл, Амазон, ВК, Авито</p>
+    </main>
+{% endblock %}

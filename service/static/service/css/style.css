@@ -1,0 +1,174 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    background: #EBEBEB;
+}
+
+.container {
+    max-width: 1194px;
+    margin: auto;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    padding: 10px 10px;
+}
+
+.footer {
+    display: flex;
+    align-items: center;
+    padding: 40px 10px;
+}
+
+.logo {
+    margin-right: 30px;
+}
+
+.company-name {
+    font-family: 'Ubuntu', sans-serif;
+    font-size: 200%;
+    color: #00fa9a;
+}
+
+.login {
+    margin-left: auto;
+    display: flex;
+}
+
+.login-btn {
+    background: #00fa9a;
+    border-radius: 50px;
+    padding: 16px 30px;
+    display: block;
+    text-decoration: none;
+    color: #000000;
+}
+
+.username {
+    font-size: 125%;
+    padding: 16px 30px;
+}
+
+.logout-btn {
+    background: #00fa9a;
+    border-radius: 50px;
+    padding: 16px 30px;
+    display: block;
+    text-decoration: none;
+    color: #000000;
+}
+
+.sayhello {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 20px;
+}
+
+.sayhello-emoji {
+    font-size: 300%;
+}
+
+.sayhello-text {
+    background: #00fa9a;
+    border-radius: 50px;
+    padding: 16px 30px;
+    display: block;
+    font-size: 200%
+}
+
+.auth {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.auth-greeting {
+    margin-top: 50px;
+    font-size: 250%
+}
+
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.auth-name {
+    border: none;
+    width: 200%;
+    padding: 13px 20px;
+    margin-bottom: 20px;
+    border-radius: 50px;
+}
+
+.auth-password {
+    border: none;
+    width: 200%;
+    padding: 13px 20px;
+    margin-bottom: 20px;
+    border-radius: 50px;
+}
+
+.auth-btn {
+    background: #00fa9a;
+    border-radius: 50px;
+    padding: 16px 30px;
+    display: block;
+    width: 100%;
+    text-decoration: none;
+    border: none;
+    color: #000000;
+    margin-top: 20px;
+
+}
+
+.auth-error {
+    background: #ff8e8e;
+    padding: 13px 20px;
+    border-radius: 50px;
+}
+
+.adduser {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.adduser-text {
+    margin-top: 50px;
+    font-size: 250%
+}
+
+.adduser-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.adduser-input {
+    border: none;
+    width: 200%;
+    padding: 13px 20px;
+    margin-bottom: 20px;
+    border-radius: 50px;
+}
+
+.addproject-btn {
+    background: #00fa9a;
+    border-radius: 50px;
+    padding: 16px 30px;
+    display: block;
+    width: 100%;
+    text-decoration: none;
+    border: none;
+    color: #000000;
+    margin-top: 20px;
+
+}
+
+

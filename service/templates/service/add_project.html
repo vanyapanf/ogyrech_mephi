@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block title %}Проекты{% endblock %}
+
+{% block main %}
+    {% include 'include/side-menu.html' %}
+    <main class="main">
+        <h2>Создание проекта</h2>
+        <div>
+            <label>
+                <input type="text" id="name" placeholder="Название проекта">
+            </label>
+            <br>
+            <input type="submit" class="addproject-btn" value="Создать проект" onclick="CreateProject()">
+        </div>
+    </main>
+{% endblock %}
