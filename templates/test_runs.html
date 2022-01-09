@@ -1,36 +1,62 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Ogurech</title>
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../static/css/normalize.css">
-    <link rel="stylesheet" href="../static/css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/static/css/normalize.css" />
+    <link rel="stylesheet" href="/static/css/style.css" />
 </head>
 <body>
     <header class="header container">
         <a href="/" class="logo">
-            <img width="128" src="img/logo.png" alt="Лого: Ogurech" class="logo-image" />
-        </a>
-        <span>
-            Ogurech
-        </span>
-        <div class="auth">
-            <a href="#" class="login">Выйти</a>
-        </div>
+            <img
+              width="70"
+              src="/static/img/logo.png"
+              alt="Лого: Ogurech"
+              class="logo-image"
+            />
+          </a>
+          <span class="company-name"> Ogurech </span>
+          <div class="login">
+            <span class="username">t.testuser</span>
+            <a href="#" class="logout-btn">Выйти</a>
+          </div>
     </header> 
-    <aside>
-        <a href="#">Проекты</a>
-        <a href="#">Админ-панель</a>
-        <a href="#">Тест-кейсы</a>
-    </aside>
-    <main class="main">
-        
+    <main class="main container">
+        <div class="wrapper">
+            <aside class="nav">
+              <a class="nav-elem" href="#">Проекты</a>
+              <a class="nav-elem" href="#">Админ-панель</a>
+              <a class="nav-elem" href="#">Тест-кейсы</a>
+            </aside>
+            <section class="testruns content-section">
+              <span class="title">Релиз_1</span>
+              <div class="btns">
+                <input class="add-btn" type="submit" value="Новый тест-ран" />
+              </div>
+              <div class="content">
+                <div class="card">
+                  <span class="card-title">Тест_ран_1</span>
+                </div>
+                <div class="card">
+                  <span class="card-title">Тест_ран_2</span>
+                </div>
+              </div>
+            </section>
+          </div>
     </main>
     <footer class="footer">
         
