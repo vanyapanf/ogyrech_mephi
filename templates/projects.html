@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="ru">
-<head>
+  <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -18,45 +18,58 @@
     />
     <link rel="stylesheet" href="/static/css/normalize.css" />
     <link rel="stylesheet" href="/static/css/style.css" />
-</head>
-<body>
+  </head>
+  <body>
     <header class="header container">
-        <a href="/" class="logo">
-          <img
-            width="70"
-            src="/static/img/logo.png"
-            alt="Лого: Ogurech"
-            class="logo-image"
-          />
-        </a>
-        <span class="company-name"> Ogurech </span>
-        <div class="login">
-          <span class="username">t.testuser</span>
-          <a href="#" class="logout-btn">Выйти</a>
-        </div>
-      </header>
-    <aside>
-        <a href="#">Проекты</a>
-        <a href="#">Админ-панель</a>
-        <a href="#">Тест-кейсы</a>
-    </aside>
+      <a href="/" class="logo">
+        <img
+          width="70"
+          src="/static/img/logo.png"
+          alt="Лого: Ogurech"
+          class="logo-image"
+        />
+      </a>
+      <span class="company-name"> Ogurech </span>
+      <div class="login">
+        <span class="username">t.testuser</span>
+        <a href="#" class="logout-btn">Выйти</a>
+      </div>
+    </header>
     <main class="main container">
-        <section class="projects">
-            <h2 class="section-title">Проекты</h2>
-            <div class="projects-content">
-                <div class="project-card">
-                    <h3 class="project-title">Проект_1</h3>
-                </div>
-                <div class="project-card">
-                    <h3 class="project-title">Проект_2</h3>
-                </div>
+      <div class="wrapper">
+        <aside class="nav">
+          <a class="nav-elem" href="#">Проекты</a>
+          <a class="nav-elem" href="#">Админ-панель</a>
+          <a class="nav-elem" href="#">Тест-кейсы</a>
+        </aside>
+        <section class="projects content-section">
+          <span class="title">Проекты</span>
+          <div class="btns">
+            <input class="add-btn" type="submit" value="Новый проект" />
+          </div>
+          <div class="content">
+            <div class="card">
+              <span class="card-title">Проект_1</span>
+              <div class="card-content">
+                <span class="card-content-title">Описание проекта:</span>
+                <span class="card-content-info">Это первый тестируемый проект в системе Ogurech</span>
+                <a class="card-content-link" href="#">Перейти</a>
+              </div>
             </div>
+            <div class="card">
+              <span class="card-title">Проект_2</span>
+              <div class="card-content">
+                <span class="card-content-title">Описание проекта:</span>
+                <span class="card-content-info">Это второй тестируемый проект в системе Ogurech</span>
+                <a class="card-content-link" href="#">Перейти</a>
+              </div>
+            </div>
+          </div>
         </section>
+      </div>
     </main>
-    <footer class="footer">
-        
-    </footer>
-    <div class="modal create-project">
+    <footer class="footer"></footer>
+    <div class="modal modal-dialog create-project">
         <div class="modal-header">
             <h3 class="modal-title">Новый проект</h3>
             <button class="close">&times;</button>
@@ -69,6 +82,6 @@
             <button class="button" type="submit">Создать</button>
         </div>
     </div>
-    <script src="js/main.js"></script>
-</body>
+    <script src="/static/js/main.js"></script>
+  </body>
 </html>
