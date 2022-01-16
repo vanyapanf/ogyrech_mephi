@@ -2,31 +2,45 @@
 {% block title %}Проекты{% endblock %}
 
 {% block main %}
-    {% include 'include/side-menu.html' %}
-    <main class="main">
-        <br>
-        <div>
-            <a href="/test/add_project">Создать проект</a>
-        </div>
-        <br>
-        <div class="print">
-            <table class="result-table">
-                <caption>Проекты</caption>
-                <tr>
-                    <td>ID Проекта</td>
-                    <td>Название</td>
-                    <td></td>
-                </tr>
-                {% for project in projects %}
-                    <tr>
-                        <td  class="project">
-                            {{ project.id }}
-                        </td>
-                        <td>{{ project.name }}</td>
-                        <td><a href="/test/project/{{ project.id }}">Посмотреть релизы</a><br></td>
-                    </tr>
-                {% endfor %}
-            </table>
+    <main class="main container">
+        <div class="wrapper">
+            {% include 'include/side-menu.html' %}
+            <section class="projects content-section">
+                <span class="title">Проекты</span>
+                <div class="btns">
+                    <input class="add-btn" type="submit" value="Новый проект" />
+                </div>
+                <div class="content">
+                    {% for project in projects %}
+                        <div class="card">
+                            <span class="card-title">{{ project.name }}</span>
+                            <div class="card-content">
+                                <span class="card-content-title">Описание проекта:</span>
+                                <span class="card-content-info">{{ project.description }}</span>
+                                <a class="card-content-link" href="/test/projects/{{ project.id }}">Перейти</a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </section>
         </div>
     </main>
 {% endblock %}
+
+{%  block hidden %}
+    <div class="modal modal-dialog create-project">
+        <div class="modal-header">
+            <h3 class="modal-title">Новый проект</h3>
+            <button class="close">&times;</button>
+        </div>
+        <div class="modal-body">
+            {% csrf_token %}
+            <input class="project-name" id='name' type="text" placeholder="Название проекта">
+            <input class="project-description" id="description" type="text" placeholder="Описание проекта">
+        </div>
+        <div class="modal-footer">
+            <input class="button" type="submit" onclick="CreateProject()" value="Создать проект"/>
+        </div>
+    </div>
+{% endblock %}
+
