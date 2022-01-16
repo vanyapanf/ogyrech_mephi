@@ -9,6 +9,7 @@ addBtn.addEventListener('click', () => {
 })   
 
 close.addEventListener('click', () => {
+    location.reload()
     modal.classList.remove('is-open')
 })
 
@@ -16,8 +17,8 @@ for (let cardItem of cards) {
     cardItem.addEventListener('click', () => {
         cardContent = cardItem.querySelector('.card-content');
 
-        if (cardContent.style.display != 'block') { 
-            cardContent.style.display = 'block';
+        if (cardContent.style.display != 'flex') { 
+            cardContent.style.display = 'flex';
         } else { 
             cardContent.style.display = 'none'; 
         }

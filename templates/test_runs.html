@@ -44,15 +44,45 @@
             </aside>
             <section class="testruns content-section">
               <span class="title">Релиз_1</span>
+              <div class="section-description"> 
+                Описание релиза: 
+                <span class="description-text">Тесты первого релиза в системе Ogurech</span>
+              </div>
               <div class="btns">
                 <input class="add-btn" type="submit" value="Новый тест-ран" />
               </div>
               <div class="content">
                 <div class="card">
                   <span class="card-title">Тест_ран_1</span>
+                  <div class="tester-title">Тестировщик: <span class="tester-name">t.testuser</span></div>
+                  <div class="progress-title">
+                    <span class="test-number">Общее кол-во тестов 4</span>
+                    <span class="success-number">Пройдено 2 тестов</span>
+                    <span class="fail-number">Провалено 1 тестов</span>
+                    <span class="danger-number">Не проверялось 1 тестов</span>
+                  </div>
+                  <div class="card-content">
+                    <div class="tester-title">Создатель: <span class="tester-name">t.testuser</span></div>
+                    <span class="card-content-title">Описание тест-рана:</span>
+                    <span class="card-content-info">Тесты первого тест-рана в системе Ogurech</span>
+                    <a class="card-content-link" href="#">Перейти</a>
+                  </div>
                 </div>
                 <div class="card">
                   <span class="card-title">Тест_ран_2</span>
+                  <div class="tester-title">Тестировщик: <span class="tester-name">t.testuser</span></div>
+                  <div class="progress-title">
+                    <span class="test-number">Общее кол-во тестов 4</span>
+                    <span class="success-number">Пройдено 2 тестов</span>
+                    <span class="fail-number">Провалено 1 тестов</span>
+                    <span class="danger-number">Не проверялось 1 тестов</span>
+                  </div>
+                  <div class="card-content">
+                    <div class="tester-title">Создатель: <span class="tester-name">t.testuser</span></div>
+                    <span class="card-content-title">Описание тест-рана:</span>
+                    <span class="card-content-info">Тесты второго тест-рана в системе Ogurech</span>
+                    <a class="card-content-link" href="#">Перейти</a>
+                  </div>
                 </div>
               </div>
             </section>
@@ -61,6 +91,22 @@
     <footer class="footer">
         
     </footer>
-    <script src="js/main.js"></script>
+    <div class="modal create-test-run">
+      <div class="modal-dialog">
+        <div class="modal-header">
+            <h3 class="modal-title">Новый тест-ран</h3>
+            <button class="close">&times;</button>
+        </div>
+        <div class="modal-body">
+            <input class="modal-input" type="text" placeholder="имя тест-рана">
+            <input class="modal-input" type="text" placeholder="описание тест-рана">
+            <input class="modal-input" type="text" placeholder="исполнитель тест-рана">
+        </div>
+        <div class="modal-footer">
+            <button class="modal-button" type="submit">Создать</button>
+        </div>
+      </div>
+    </div>
+    <script src="/static/js/main.js"></script>
 </body>
 </html>
