@@ -4,12 +4,21 @@
 
 {% endblock %}
 {% block main %}
-   <main class="main">
-       <h2>Log In</h2>
-       <form method="post">
-           {% csrf_token %}
-           {{ form.as_p }}
-           <button type="submit">Войти</button>
-       </form>
+   <main class="main container">
+       <section class="auth">
+           <p class="auth-greeting">Добро пожаловать!!!</p>
+                <form id="auth-form" method="post"
+                      action="{% url 'login' %}">
+                    <div class="auth-form">
+                        {% csrf_token %}
+                        <input class="auth-name" type="username" name="username" placeholder="Логин" />
+                        <input class="auth-password" type="password " name="password" placeholder="Пароль" />
+                        <button type="submit" class="auth-btn"> Войти</button>
+                    </div>
+                </form>
+           {% if form.errors %}
+               <p class="auth-error">Неверные логин или пароль</p>
+           {% endif %}
+       </section>
    </main>
 {% endblock %}

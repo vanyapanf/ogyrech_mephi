@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block title %}{{ project.name }}{% endblock %}
+
+{% block main %}
+    <main class="main container">
+        <div class="wrapper">
+            {% include 'include/side-menu.html' %}
+            <section class="releases content-section">
+                <span class="title">{{ project.name }}</span>
+                <div class="btns">
+                    <input class="add-btn" type="submit" value="Новый релиз" />
+                </div>
+                <span class="content">
+                    {% for release in releases %}
+                        <div class="card">
+                            <span class="card-title">{{ release.name }}</span>
+                            <div class="card-content">
+                                <span class="card-content-title">Описание релиза:</span>
+                                <span class="card-content-info">{{ release.description }}</span>
+                                <a class="card-content-link" href="/test/projects/{{ project.id }}/{{ release.id }}">Перейти</a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </span>
+            </section>
+      </div>
+    </main>
+{% endblock %}
+
+{%  block hidden %}
+    <div class="modal modal-dialog create-project">
+        <div class="modal-header">
+            <h3 class="modal-title">Новый релиз</h3>
+            <button class="close">&times;</button>
+        </div>
+        <div class="modal-body">
+            <input type="hidden" id="project_id" value="{{ project.id }}">
+            <input class="project-name" id='name' type="text" placeholder="Название релиза">
+            <textarea class="project-description" id="description" type="text" placeholder="Описание релиза"></textarea>
+        </div>
+        <div class="modal-footer">
+            <input class="button" type="submit" onclick="CreateRelease()" value="Создать релиз"/>
+        </div>
+    </div>
+{% endblock %}
+

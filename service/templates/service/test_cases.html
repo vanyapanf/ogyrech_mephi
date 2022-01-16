@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block title %}Тест кейсы{% endblock %}
+
+{% block main %}
+    <main class="main container">
+        <div class="wrapper">
+            {% include 'include/side-menu.html' %}
+            <section class="releases content-section">
+                <div class="btns">
+                    <input class="add-btn" type="submit" value="Новый тест-кейс" />
+                </div>
+                <span class="content">
+                    {% for test_case in test_cases %}
+                        <div class="card">
+                            <span class="card-title">Тест кейс {{ test_case.id }}</span>
+                            <div class="card-content">
+                                <span class="card-content-info">{{ test_case.description }}</span>
+                                <br>
+                                <br>
+                                <span class="card-content-info">Ожидаемый результат:</span>
+                                <span class="card-content-info">{{ test_case.expectedResult }}</span>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </span>
+            </section>
+      </div>
+    </main>
+{% endblock %}
+
+{%  block hidden %}
+    <div class="modal modal-dialog create-project">
+        <div class="modal-header">
+            <h3 class="modal-title">Новый тест кейс</h3>
+            <button class="close">&times;</button>
+        </div>
+        <div class="modal-body">
+            <textarea class="description" id="description" type="text" placeholder="Описание"></textarea>
+            <input class="expected-result" id='expected-result' type="text" placeholder="Ожидаемый результат">
+        </div>
+        <div class="modal-footer">
+            <input class="button" type="submit" onclick="CreateTestCase()" value="Создать"/>
+        </div>
+    </div>
+{% endblock %}
+
