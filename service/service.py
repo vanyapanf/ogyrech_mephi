@@ -1,4 +1,5 @@
 from service.repository import ProjectRepository as DB
+from service.wrappers import TestRunWrapper
 
 
 class ProjectService:
@@ -54,3 +55,39 @@ class ProjectService:
         if expected_result is None or description is None:
             raise ValueError
         return DB.create_test_case(description=description, expected_result=expected_result)
+
+    @staticmethod
+    def get_test_runs_by_release_id(release_id: int):
+        release = DB.find_release_by_id(release_id=release_id)
+        if release is not None:
+            test_runs = DB.find_test_runs_by_release_id(release=release)
+            result_test_runs = []
+            for test_run in test_runs:
+                result_test_runs.append(TestRunWrapper(test_run, release.testplan))
+
+            return release, result_test_runs
+        else:
+            raise FileNotFoundError
+
+    @staticmethod
+    def get_user_test_runs_by_release_id(user, release_id):
+        release = DB.find_release_by_id(release_id=release_id)
+        if release is not None:
+            return release, DB.find_user_test_runs_by_release_id(user=user,release=release)
+        else:
+            raise FileNotFoundError
+
+    @staticmethod
+    def create_test_run(creator, **kwargs):
+        test_runner_user_name = kwargs.get('test_runner')
+        release_id = int(kwargs.get('release_id'))
+
+        if test_runner_user_name is None or release_id is None:
+            raise ValueError
+        test_runner = DB.find_user_by_user_name(test_runner_user_name)
+        release = DB.find_release_by_id(release_id=release_id)
+        if test_runner is not None:
+            test_run = DB.create_test_run(release.testplan, test_runner, creator)
+            DB.create_test_run_result(test_plan=release.testplan, test_run=test_run)
+        else:
+            raise FileNotFoundError

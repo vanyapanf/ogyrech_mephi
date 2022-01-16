@@ -1,11 +1,11 @@
 import json
 import jsonpickle
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from django.http import HttpRequest, HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
 
-from service.pages import ERROR, PROJECTS, ADD_PROJECT, RELEASES, TEST_CASES
+from service.pages import ERROR, PROJECTS, ADD_PROJECT, RELEASES, TEST_CASES, TEST_RUNS
 from service.service import ProjectService
 
 
@@ -34,6 +34,7 @@ def return_data_template(func):
 
 @csrf_exempt
 @login_required(login_url='login')
+@permission_required('add_project', login_url='login')
 @return_data_template
 def create_project(request: HttpRequest):
     if request.method == 'POST':
@@ -73,6 +74,7 @@ def find_projects(request):
 
 
 @login_required(login_url='login')
+@permission_required('view_release', login_url='login')
 @return_data_template
 def open_project_releases(request, project_id: int):
     if request.method == 'GET':
@@ -89,6 +91,7 @@ def open_project_releases(request, project_id: int):
 
 @csrf_exempt
 @login_required(login_url='login')
+@permission_required('add_release', login_url='login')
 @return_data_template
 def create_release(request: HttpRequest):
     if request.method == 'POST':
@@ -115,6 +118,7 @@ def create_release(request: HttpRequest):
 
 
 @login_required(login_url='login')
+@permission_required('view_testcase', login_url='login')
 @return_data_template
 def find_test_cases(request):
     test_cases = ProjectService.find_test_cases()
@@ -125,6 +129,7 @@ def find_test_cases(request):
 
 @csrf_exempt
 @login_required(login_url='login')
+@permission_required('add_testcase', login_url='login')
 @return_data_template
 def create_test_case(request: HttpRequest):
     if request.method == 'POST':
@@ -150,3 +155,44 @@ def create_test_case(request: HttpRequest):
         return request, {'ok': False, 'error': 'InvalidMethod'}
 
 
+@login_required(login_url='login')
+@permission_required('view_testrun', login_url='login')
+@return_data_template
+def open_release_test_runs(request, project_id: int, release_id: int):
+    if request.method == 'GET':
+        user = request.user
+        if user.groups.filter(name='Администратор').exists() or user.is_superuser:
+            release, test_runs = ProjectService.get_test_runs_by_release_id(release_id)
+
+        else:
+            release, test_runs = ProjectService.get_user_test_runs_by_release_id(user, release_id)
+        data = {'ok': True,
+                'test_runs': test_runs,
+                'release': release,
+                'template': TEST_RUNS.get_full_name()
+                }
+        return request, data
+    else:
+        return request, {'ok': False, 'error': 'InvalidMethod'}
+
+@csrf_exempt
+@login_required(login_url='login')
+@permission_required('add_testrun', login_url='login')
+@return_data_template
+def create_test_run(request, project_id: int, release_id: int):
+    if request.method == 'POST':
+        try:
+            body = body_to_dict(request.body.decode('utf-8'))
+        except json.decoder.JSONDecodeError:
+            return request, {'ok': False, 'error': 'InvalidBody'}
+        try:
+            ProjectService.create_test_run(request.user, **body)
+            redirect(f'{PROJECTS.name}/{project_id}/{release_id}')
+        except ValueError or TypeError:
+            data = {'error': 'ValueError', 'ok': False, 'message': 'InvalidBody'}
+            return request, data
+        except FileExistsError:
+            data = {'error': 'FileExistsError', 'ok': False, 'message': 'Project already exist'}
+            return request, data
+    else:
+        return request, {'ok': False, 'error': 'InvalidMethod'}

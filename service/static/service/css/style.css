@@ -168,7 +168,6 @@ body {
     border: none;
     color: #000000;
     margin-top: 20px;
-
 }
 
 .wrapper {
@@ -201,6 +200,11 @@ body {
     flex-direction: column;
     padding: 10px 70px;
     width: 100%;
+}
+
+.section-description {
+    margin-top: 20px;
+    margin-bottom: 20px;
 }
 
 .btns {
@@ -236,6 +240,100 @@ body {
 
 .card-content {
     display: none;
+    flex-direction: column;
+    margin-top: 10px;
+}
+
+.card-content-link {
+    margin-top: 5px;
+    background: #EBEBEB;
+    border-radius: 20px;
+    padding: 16px 30px;
+    text-decoration: none;
+    border: none;
+    color: #000000;
+    align-self: flex-end;
+}
+
+.progress-title {
+    display: flex;
+    margin-top: 5px;
+}
+
+.test-number {
+    background: #EBEBEB;
+    border-radius: 10px;
+    padding: 4px 9px;
+    text-decoration: none;
+    border: none;
+    color: #000000;
+    margin-right: 5px;
+}
+
+.success-number {
+    background: #76ff7a;
+    border-radius: 10px;
+    padding: 4px 9px;
+    text-decoration: none;
+    border: none;
+    color: #000000;
+    margin-right: 5px;
+}
+
+.fail-number {
+    background: #ff8e8e;
+    border-radius: 10px;
+    padding: 4px 9px;
+    text-decoration: none;
+    border: none;
+    color: #000000;
+    margin-right: 5px;
+}
+
+.danger-number {
+    background: #ffff85;
+    border-radius: 10px;
+    padding: 4px 9px;
+    text-decoration: none;
+    border: none;
+    color: #000000;
+    margin-right: 5px;
+}
+
+.tester-title {
+    margin-top: 10px;
+}
+
+.result {
+    margin-top: 10px;
+}
+
+.real-result {
+    margin-top: 5px;
+}
+
+.card-input {
+    border: none;
+    width: 100%;
+    padding: 13px 20px;
+    margin-top: 15px;
+    border-radius: 50px;
+}
+
+.card-content-btns {
+    display: flex;
+    margin-top: 10px;
+}
+
+.card-btn {
+    background: #EBEBEB;
+    border-radius: 50px;
+    padding: 16px 30px;
+    margin-right: 5px;
+    width: 100%;
+    text-decoration: none;
+    border: none;
+    color: #000000;
 }
 
 .modal {
@@ -256,10 +354,21 @@ body {
 .modal-dialog {
     max-width: 780px;
     width: 95%;
-    background: #ffffff;
+    background: #EBEBEB;
     border-radius: 5px;
     margin: auto;
     padding: 40px 45px;
+    border-radius: 20px;
+    flex-direction: column;
+    align-items: center;
+    align-self: center;
+
+}
+
+.close {
+    font-size: 36px;
+    border: none;
+    background-color: transparent;
 }
 
 .modal-header {
@@ -276,14 +385,28 @@ body {
     line-height: 42px;
 }
 
-.close {
-    font-size: 36px;
-    border: none;
-    background-color: transparent;
+.modal-body {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 22px;
 }
 
-.modal-body {
-    margin-bottom: 22px;
+.modal-input {
+    border: none;
+    width: 100%;
+    padding: 13px 20px;
+    margin-bottom: 20px;
+    border-radius: 50px;
+}
+
+.modal-button {
+    background: #00fa9a;
+    border-radius: 50px;
+    padding: 16px 30px;
+    width: 100%;
+    text-decoration: none;
+    border: none;
+    color: #000000;
 }
 
 .modal-footer {
@@ -291,3 +414,5 @@ body {
     align-items: center;
     justify-content: space-between;
 }
+
+

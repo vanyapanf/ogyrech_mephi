@@ -12,13 +12,15 @@
                 <span class="content">
                     {% for test_case in test_cases %}
                         <div class="card">
-                            <span class="card-title">Тест кейс {{ test_case.id }}</span>
+                            <div class="card-title">
+                                <span class="card-name">Тест кейс {{ test_case.id }}</span>
+                                <span class="result-emoji">🥒</span>
+                            </div>
                             <div class="card-content">
+                                <span class="card-content-title">Описание тест-кейса:</span>
                                 <span class="card-content-info">{{ test_case.description }}</span>
                                 <br>
-                                <br>
-                                <span class="card-content-info">Ожидаемый результат:</span>
-                                <span class="card-content-info">{{ test_case.expectedResult }}</span>
+                                <span class="result">Ожидаемый результат: {{ test_case.expectedResult }}</span>
                             </div>
                         </div>
                     {% endfor %}

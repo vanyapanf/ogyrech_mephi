@@ -1,3 +1,4 @@
+
 const modal = document.querySelector('.modal');
 const addBtn = document.querySelector('.add-btn');
 const close = modal.querySelector('.close');
@@ -8,6 +9,7 @@ addBtn.addEventListener('click', () => {
 })
 
 close.addEventListener('click', () => {
+    location.reload()
     modal.classList.remove('is-open')
 })
 
@@ -15,8 +17,8 @@ for (let cardItem of cards) {
     cardItem.addEventListener('click', () => {
         cardContent = cardItem.querySelector('.card-content');
 
-        if (cardContent.style.display != 'block') {
-            cardContent.style.display = 'block';
+        if (cardContent.style.display != 'flex') {
+            cardContent.style.display = 'flex';
         } else {
             cardContent.style.display = 'none';
         }
@@ -54,6 +56,23 @@ function CreateRelease() {
 		method:		'POST',
 		cache: 		false,
 		data:   	JSON.stringify({'name': name2, 'description':description, 'project_id': project_id}),
+		contentType: 'application/json; charset=utf-8',
+        dataType:	'html',
+		success: function(data) {
+			$('body').html(data);
+		}
+	});
+}
+
+function CreateTestRun() {
+    const test_runner = document.getElementById('test_runner').value
+	const release_id = document.getElementById('release_id').value
+
+	$.ajax({
+		url:    	release_id+'/add_testrun',
+		method:		'POST',
+		cache: 		false,
+		data:   	JSON.stringify({'test_runner': test_runner, 'release_id':release_id}),
 		contentType: 'application/json; charset=utf-8',
         dataType:	'html',
 		success: function(data) {
