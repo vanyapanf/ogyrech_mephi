@@ -4,11 +4,13 @@ from django.contrib.auth.models import User
 
 class Project(models.Model):
     name = models.CharField(max_length=200, unique=True)
+    description = models.TextField(null=True)
 
 
 class Release(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
-    description = models.TextField()
+    name = models.TextField(unique=True, null=False)
+    description = models.TextField(null=True)
 
 
 class TestPlan(models.Model):
@@ -32,7 +34,7 @@ class TestRunResult(models.Model):
     runDate = models.DateTimeField()
     successfulTestes = models.IntegerField()
     failedTestes = models.IntegerField()
-    progress = models.IntegerField()
+    progress = models.FloatField()  # percent
     isFinished = models.BooleanField()
 
 
@@ -43,4 +45,3 @@ class TestCaseResult(models.Model):
     isSuccessful = models.BooleanField()
     runDate = models.DateTimeField()
     realResult = models.CharField(max_length=200)
-

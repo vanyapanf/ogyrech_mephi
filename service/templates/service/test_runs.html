@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block title %}{{ release.name }}{% endblock %}
+
+{% block main %}
+    <main class="main container">
+        <div class="wrapper">
+            {% include 'include/side-menu.html' %}
+            <section class="testruns content-section">
+              <span class="title">{{ release.name }}</span>
+              <div class="btns">
+                <input class="add-btn" type="submit" value="Новый тест-ран" />
+              </div>
+              <div class="content">
+                  {% for test_run in test_runs %}
+                      <div class="card">
+                          <span class="card-title">Тест ран {{ test_run.id }}</span>
+                      </div>
+                  {% endfor %}
+
+                <div class="card">
+                  <span class="card-title">Тест_ран_1</span>
+                </div>
+                <div class="card">
+                  <span class="card-title">Тест_ран_2</span>
+                </div>
+              </div>
+            </section>
+          </div>
+    </main>
+{% endblock %}

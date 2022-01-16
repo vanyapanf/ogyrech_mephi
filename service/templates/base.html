@@ -2,39 +2,47 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{% block title %}Огурэц{% endblock %}</title>
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-{#    <link rel="stylesheet" href="css/normalize.css">#}
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@700&display=swap"
+      rel="stylesheet"
+    />
+
     <link rel="stylesheet" href="{%  static 'service/css/style.css' %}">
     <link rel="stylesheet" href="{%  static 'service/css/normalize.css' %}">
 </head>
 <body>
    <header class="header container">
-        <a href="/" class="logo">
-            <img width="128" src="{% static 'service/img/logo.png' %}" alt="Лого: Ogurech" class="logo-image" />
-        </a>
-        <span>
-            Ogurech
-        </span>
-        {% block user %}
-            {% if user.is_authenticated %}
-                <div class="user-info">
-                    <p>{{ user.username }}</p>
-                    <p>{{ user.role }}</p>
-                    <p><a href="{% url 'logout' %}">Log Out</a></p>
-                </div>
-            {% else %}
-                <div class="auth">
-                    <a href="{% url 'login' %}" class="login">Войти</a>
-                </div>
-            {% endif %}
-        {% endblock %}
+       <a href="/" class="logo">
+           <img
+                   width="70"
+                   src="{% static 'service/img/logo.png' %}"
+                   alt="Лого: Ogurech"
+                   class="logo-image" />
+       </a>
+       <span class="company-name"> Ogurech </span>
+       {% block user %}
+           <div class="login">
+           {% if user.is_authenticated %}
+               <span class="username">{{ user.username }}</span>
+               <a href="{% url 'logout' %}" class="logout-btn">Выйти</a>
+
+           {% else %}
+               <a href="{% url 'login' %}" class="login-btn">Войти</a>
+           {% endif %}
+           </div>
+       {% endblock %}
    </header>
 
     {% block main %}
@@ -43,8 +51,10 @@
         </main>
    {% endblock %}
 
-   <footer class="footer">
-   </footer>
+   <footer class="footer"></footer>
+   {% block hidden %}
+
+   {% endblock %}
    <script src="{% static 'service/js/main.js' %}"></script>
    <script type="text/javascript" src="{% static "service/js/jquery-3.5.1.min.js" %}"></script>
 </body>

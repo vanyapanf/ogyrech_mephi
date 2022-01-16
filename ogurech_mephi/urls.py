@@ -23,7 +23,7 @@ from django.views.generic import TemplateView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-#    path('services/', include('django.contrib.auth.urls')),  # new
+    path('services/', include('django.contrib.auth.urls')),  # new
     path('', TemplateView.as_view(template_name='service/index.html'), name='index'),
     path('test/', include('service.urls')),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
