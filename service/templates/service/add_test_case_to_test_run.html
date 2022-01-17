@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% block title %}Тест ран {{ test_run.id }}{% endblock %}
+
+{% block main %}
+    <main class="main container">
+        <div class="wrapper">
+            {% include 'include/side-menu.html' %}
+            <section class="testruns content-section">
+                <span class="title">Тест ран {{ test_run.id }}</span>
+                <div class="btns">
+                    <button class="modal-button" type="submit" onclick="AddToTestRun()">Создать</button>
+                </div>
+                <div class="content">
+                    {% for test_case in test_cases %}
+                        <div class="card">
+
+                            <div class="card-title">
+                                <input type="checkbox" class="checkbox-row" id="testcase_select" name="testcase" value="{{ test_case.id }}">
+                                <label for="testcase" class="card-name">Тест кейс {{ test_case.id }}</label>
+                                <span class="result-emoji">🥒</span>
+                                <br><br>
+                                <span class="card-content-title">Описание тест-кейса:</span>
+                                <span class="card-content-info">{{ test_case.description }}</span>
+                                <br><br>
+                                <span class="result">Ожидаемый результат: {{ test_case.expectedResult }}</span>
+                            </div>
+                            <div class="card-content">
+                            </div>
+                        </div>
+                    {% endfor %}
+
+                </div>
+            </section>
+          </div>
+    </main>
+{% endblock %}
+
+{% block hidden %}
+    <div class="modal create-test-case">
+        <div class="modal-dialog">
+            <div class="modal-header">
+                <h3 class="modal-title">Новый тест-кейс</h3>
+{#                <button class="close">&times;</button>#}
+                <button class="close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="test_run_id" value="{{ test_run.id }}">
+                <input class="modal-input" type="text" id="name" placeholder="имя тест-кейса">
+                <input class="modal-input" type="text" id="description" placeholder="описание тест-кейса">
+                <input class="modal-input" type="text" id="expected_result" placeholder="ожидаемый результат">
+            </div>
+            <div class="modal-footer">
+                <button class="modal-button" type="submit" onclick="CreateTestCaseInTestRun()">Создать</button>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+

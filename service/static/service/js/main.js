@@ -101,4 +101,30 @@ function CreateTestCase() {
 	});
 }
 
+function AddToTestRun() {
+    // const name = $('#name').val();
+
+	var checked = document.getElementsByClassName('checkbox-row');
+	var values = [];
+	for(var i = 0; i < checked.length; i++){
+		if(checked[i].checked){
+			 var case_id = checked[i].getAttribute("value");
+			 values.push(case_id);
+		}
+	}
+	console.log(values)
+	const json_values = JSON.stringify(values);
+
+	$.ajax({
+		url:    	'add_test_case',
+		method:		'POST',
+		cache: 		false,
+		data:   	JSON.stringify({'case_ids': json_values}),
+		contentType: 'application/json; charset=utf-8',
+        dataType:	'html',
+		success: function(data) {
+			$('body').html(data);
+		}
+	});
+}
 

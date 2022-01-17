@@ -18,7 +18,7 @@
                     {% for test_run in test_runs %}
                         <div class="card">
                             <span class="card-title">Тест ран {{ test_run.id }}</span>
-                            <div class="tester-title">Тестировщик: <span class="tester-name">{{ test_run.testRunner.name }}</span></div>
+                            <div class="tester-title">Тестировщик: <span class="tester-name">{{ test_run.testRunner.username }}</span></div>
                             <div class="progress-title">
                                 <span class="test-number">Общее кол-во тестов {{ test_run.num_of_test }}</span>
                                 <span class="success-number">Пройдено тестов: {{ test_run.successfull_test }}</span>
@@ -26,12 +26,9 @@
                                 <span class="danger-number">Не проверялось тестов: {{ test_run.not_run }}</span>
                             </div>
                             <div class="card-content">
-                                <div class="tester-title">Создатель: <span class="tester-name">{{ test_run.creator.name }}</span></div>
-                                <a class="card-content-link" href="#">Перейти</a>
+                                <div class="tester-title">Создатель: <span class="tester-name">{{ test_run.creator.username }}</span></div>
+                                <a class="card-content-link" href="/test/releases/{{ release.id }}/{{ test_run.id }}">Перейти</a>
                               </div>
-
-
-                            <span class="card-title">Тест ран {{ test_run.id }}</span>
                         </div>
                     {% endfor %}
                 </div>

@@ -88,3 +88,17 @@ class ProjectRepository:
     def create_test_run_result(test_plan, test_run):
         return TestRunResult.objects.create(testPlan=test_plan, testRun=test_run)
 
+    @staticmethod
+    def find_test_run_by_id(testrun_id):
+        try:
+            return TestRun.objects.get(id=testrun_id)
+        except TestRun.DoesNotExist:
+            raise FileNotFoundError
+
+    @staticmethod
+    def add_test_cases_to_test_run(testrun, case):
+        testrun.testCase.add(case)
+
+    @staticmethod
+    def find_test_case_by_id(case_id: int):
+        return TestCase.objects.get(id=case_id)

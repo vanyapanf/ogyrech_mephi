@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% block title %}Тест ран {{ test_run.id }}{% endblock %}
+
+{% block main %}
+    <main class="main container">
+        <div class="wrapper">
+            {% include 'include/side-menu.html' %}
+            <section class="testruns content-section">
+                <span class="title">Тест ран {{ test_run.id }}</span>
+                <div class="btns">
+                    <div class="add-link">
+                        <a href="{% url 'get_test_run_test_cases' release_id=release_id testrun_id=test_run.id %}">Добавить тест кейсы из базы</a>
+                    </div>
+                    <input class="add-btn" type="submit" value="Новый тест-ран" />
+                </div>
+                <div class="content">
+                    {% for test_case in test_cases %}
+                        <div class="card">
+                            <div class="card-title">
+                                <span class="card-name">Тест кейс {{ test_case.id }}</span>
+                                <span class="result-emoji">🥒</span>
+                            </div>
+                            <div class="card-content">
+                                <span class="card-content-title">Описание тест-кейса:</span>
+                                <span class="card-content-info">{{ test_case.description }}</span>
+                                <span class="result">Ожидаемый результат: {{ test_case.expectedResult }}</span>
+                                <input class="card-input" type="text" placeholder="Полученный результат">
+                                <div class="card-content-btns">
+                                    <button class="card-btn">Тест пройден 😀</button>
+                                    <button class="card-btn">Тест провален 🙁</button>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </section>
+          </div>
+    </main>
+{% endblock %}
+
+{% block hidden %}
+    <div class="modal create-test-case">
+        <div class="modal-dialog">
+            <div class="modal-header">
+                <h3 class="modal-title">Новый тест-кейс</h3>
+{#                <button class="close">&times;</button>#}
+                <button class="close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="test_run_id" value="{{ test_run.id }}">
+                <input class="modal-input" type="text" id="name" placeholder="имя тест-кейса">
+                <input class="modal-input" type="text" id="description" placeholder="описание тест-кейса">
+                <input class="modal-input" type="text" id="expected_result" placeholder="ожидаемый результат">
+            </div>
+            <div class="modal-footer">
+                <button class="modal-button" type="submit" onclick="CreateTestCaseInTestRun()">Создать</button>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+
