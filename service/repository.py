@@ -1,4 +1,4 @@
-from service.models import Project, Release, TestCase, TestPlan, TestRun, TestRunResult
+from service.models import Project, Release, TestCase, TestPlan, TestRun, TestRunResult, TestCaseResult
 from django.contrib.auth.models import User
 
 
@@ -87,6 +87,16 @@ class ProjectRepository:
     @staticmethod
     def create_test_run_result(test_plan, test_run):
         return TestRunResult.objects.create(testPlan=test_plan, testRun=test_run)
+
+    @staticmethod
+    def create_test_case_result(test_case: TestCase, test_run: TestRun, test_run_result: TestRunResult, real_result, status):
+        TestCaseResult.objects.create(
+            testCase=test_case,
+            testRun=test_run,
+            testRunResult=test_run_result,
+            isSuccessful=status,
+            realResult=real_result
+        )
 
     @staticmethod
     def find_test_run_by_id(testrun_id):

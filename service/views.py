@@ -278,3 +278,26 @@ def get_test_run_test_cases(request, release_id: int, testrun_id: int):
         return request, data
     else:
         return request, {'ok': False, 'error': 'InvalidMethod'}
+
+
+@csrf_exempt
+@login_required(login_url='login')
+@permission_required('add_testcaseresult', login_url='login')
+# @return_data_template
+def finish_test_case(request, release_id: int, testrun_id: int):
+    if request.method == 'POST':
+        try:
+            body = body_to_dict(request.body.decode('utf-8'))
+        except json.decoder.JSONDecodeError:
+            return request, {'ok': False, 'error': 'InvalidBody'}
+        try:
+            ProjectService.finish_test_case(request.user, release_id, testrun_id, **body)
+            return redirect('open_test_run', release_id=release_id, testrun_id=testrun_id)
+        except ValueError or TypeError:
+            data = {'error': 'ValueError', 'ok': False, 'message': 'InvalidBody'}
+            return request, data
+        except FileExistsError:
+            data = {'error': 'FileExistsError', 'ok': False, 'message': 'Project already exist'}
+            return render(request, ERROR.get_html(), context=data)
+    else:
+        return render(request, ERROR.get_html(), context={'ok': False, 'error': 'InvalidMethod'})

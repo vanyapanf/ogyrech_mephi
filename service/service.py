@@ -1,5 +1,8 @@
 import json
 
+from django.contrib.auth.models import User
+
+from service.models import TestCase
 from service.repository import ProjectRepository as DB
 from service.wrappers import TestRunWrapper
 
@@ -128,6 +131,32 @@ class ProjectService:
     @staticmethod
     def find_test_case_by_id(case_id: int):
         return DB.find_test_case_by_id(case_id)
+
+    @staticmethod
+    def finish_test_case(user: User, release_id, testrun_id, **kwargs):
+        real_result = kwargs.get('real_result')
+        test_case_id = int(kwargs.get('test_case_id'))
+        status = bool(kwargs.get('status'))
+
+        try:
+            test_run = ProjectService.get_test_run_by_id(testrun_id=testrun_id)
+            if test_run.user.username == user.username:
+                test_case = test_run.testCase.get(id=test_case_id)
+                test_run_result = test_run.testrunresult_set.get(testPlan__release_id=release_id)
+                DB.create_test_case_result(
+                    test_case=test_case,
+                    test_run=test_run,
+                    test_run_result=test_run_result,
+                    real_result=real_result,
+                    status=status
+                )
+            else:
+                raise PermissionError
+        except TestCase.DoesNotExist:
+            raise FileNotFoundError
+
+
+
 
 
 

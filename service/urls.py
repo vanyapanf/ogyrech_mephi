@@ -2,7 +2,8 @@ from django.urls import path, include
 from . import views
 from django.views.generic import TemplateView
 
-from .pages import ADD_PROJECT, PROJECTS, ADD_RELEASE, TEST_CASES, ADD_TEST_CASE, ADD_TEST_RUN, RELEASES
+from .pages import ADD_PROJECT, PROJECTS, ADD_RELEASE, TEST_CASES, ADD_TEST_CASE, ADD_TEST_RUN, RELEASES, \
+    FINISH_TEST_CASE
 
 urlpatterns = [
     path('', include('django.contrib.auth.urls')),  # all in service must be authenticated
@@ -22,5 +23,8 @@ urlpatterns = [
          name='add_test_case_to_test_run'),
     path(f'{RELEASES.name}/<int:release_id>/<int:testrun_id>/{TEST_CASES.name}',
          views.get_test_run_test_cases,
-         name='get_test_run_test_cases')
+         name='get_test_run_test_cases'),
+    path(f'{RELEASES.name}/<int:release_id>/<int:testrun_id>/{FINISH_TEST_CASE.name}',
+         views.finish_test_case,
+         name='finish_test_case')
 ]

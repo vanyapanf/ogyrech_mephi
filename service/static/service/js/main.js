@@ -14,12 +14,13 @@ close.addEventListener('click', () => {
 })
 
 for (let cardItem of cards) {
-    cardItem.addEventListener('click', () => {
+    cardItem.addEventListener('click', (event) => {
         cardContent = cardItem.querySelector('.card-content');
 
-        if (cardContent.style.display != 'flex') {
+        if (!cardContent.contains(event.target) && cardContent.style.display != 'flex') {
             cardContent.style.display = 'flex';
-        } else {
+        }
+        else if (!cardContent.contains(event.target) && cardContent.style.display == 'flex') {
             cardContent.style.display = 'none';
         }
     })
@@ -42,6 +43,8 @@ function CreateProject() {
 			$('body').html(data);
 		}
 	});
+	modal.classList.remove('is-open');
+	location.reload()
 }
 
 function CreateRelease() {
@@ -62,6 +65,8 @@ function CreateRelease() {
 			$('body').html(data);
 		}
 	});
+	modal.classList.remove('is-open');
+	location.reload()
 }
 
 function CreateTestRun() {
@@ -79,6 +84,8 @@ function CreateTestRun() {
 			$('body').html(data);
 		}
 	});
+	modal.classList.remove('is-open');
+	location.reload()
 }
 
 function CreateTestCase() {
@@ -99,11 +106,11 @@ function CreateTestCase() {
 			$('body').html(data);
 		}
 	});
+	modal.classList.remove('is-open');
+	location.reload()
 }
 
 function AddToTestRun() {
-    // const name = $('#name').val();
-
 	var checked = document.getElementsByClassName('checkbox-row');
 	var values = [];
 	for(var i = 0; i < checked.length; i++){
@@ -120,6 +127,54 @@ function AddToTestRun() {
 		method:		'POST',
 		cache: 		false,
 		data:   	JSON.stringify({'case_ids': json_values}),
+		contentType: 'application/json; charset=utf-8',
+        dataType:	'html',
+		success: function(data) {
+			$('body').html(data);
+		}
+	});
+	modal.classList.remove('is-open');
+	location.reload()
+}
+
+function SuccessfulCase() {
+	var real_result = document.getSelection().focusNode.childNodes.item(3).firstChild.toString()
+	var test_case_id = document.getSelection().focusNode.childNodes.item(9).firstChild.toString()
+	const test_run_id = document.getElementById('test_run_id').value
+
+	console.log(test_run_id)
+	console.log(test_case_id)
+	console.log(real_result)
+
+	var status = 'True'
+	$.ajax({
+		url:    	test_run_id+'/finish_test_case',
+		method:		'POST',
+		cache: 		false,
+		data:   	JSON.stringify({'real_result': real_result, 'test_case_id': test_case_id, 'status': status, 'test_run_id': test_run_id}),
+		contentType: 'application/json; charset=utf-8',
+        dataType:	'html',
+		success: function(data) {
+			$('body').html(data);
+		}
+	});
+}
+
+function FailedCase() {
+	var real_result = document.getSelection().focusNode.childNodes.item(8).firstChild
+	var test_case_id = document.getSelection().focusNode.childNodes.item(9).firstChild
+	const test_run_id = document.getElementById('test_run_id').value
+
+	console.log(test_run_id)
+	console.log(test_case_id)
+	console.log(real_result)
+
+	var status = 'False'
+	$.ajax({
+		url:    	test_run_id+'/finish_test_case',
+		method:		'POST',
+		cache: 		false,
+		data:   	JSON.stringify({'real_result': real_result, 'test_case_id': test_case_id, 'status': status, 'test_run_id': test_run_id}),
 		contentType: 'application/json; charset=utf-8',
         dataType:	'html',
 		success: function(data) {
