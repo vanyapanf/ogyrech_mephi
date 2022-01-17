@@ -24,18 +24,19 @@ class TestCase(models.Model):
 
 class TestRun(models.Model):
     testPlan = models.ForeignKey(TestPlan, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='user_id')
     testCase = models.ManyToManyField(TestCase, blank=True)
+    creator = models.ForeignKey(User, related_name='creator_id', on_delete=models.DO_NOTHING)
 
 
 class TestRunResult(models.Model):
     testRun = models.ForeignKey(TestRun, on_delete=models.CASCADE)
     testPlan = models.ForeignKey(TestPlan, on_delete=models.CASCADE)
-    runDate = models.DateTimeField()
-    successfulTestes = models.IntegerField()
-    failedTestes = models.IntegerField()
-    progress = models.FloatField()  # percent
-    isFinished = models.BooleanField()
+    runDate = models.DateTimeField(auto_now_add=True)
+    successfulTestes = models.IntegerField(default=0)
+    failedTestes = models.IntegerField(default=0)
+    progress = models.FloatField(default=0.0)  # percent
+    isFinished = models.BooleanField(default=False)
 
 
 class TestCaseResult(models.Model):

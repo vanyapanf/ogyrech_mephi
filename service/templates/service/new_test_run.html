@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% block title %}Новый тест-ран{% endblock %}
+
+{% block main %}
+    <main class="main container">
+        <div class="wrapper">
+            {% include 'include/side-menu.html' %}
+            <section class="testruns content-section">
+                <span class="title">{{ release.name }}</span>
+                <div class="btns">
+                    <input class="add-btn" type="submit" value="Сохранить" />
+                </div>
+                <span class="content">{{ release.description }}</span>
+
+                <div class="content">
+                    {% for test_case in test_cases %}
+                        <div class="card">
+                            <span class="card-title">Тест кейс {{ test_case.id }}</span>
+                            <div class="card-content">
+                                <span class="card-content-info">{{ test_case.description }}</span>
+                                <br>
+                                <br>
+                                <span class="card-content-info">Ожидаемый результат:</span>
+                                <span class="card-content-info">{{ test_case.expectedResult }}</span>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </section>
+          </div>
+    </main>
+{% endblock %}
+
+

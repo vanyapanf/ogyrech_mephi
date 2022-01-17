@@ -6,25 +6,58 @@
         <div class="wrapper">
             {% include 'include/side-menu.html' %}
             <section class="testruns content-section">
-              <span class="title">{{ release.name }}</span>
-              <div class="btns">
-                <input class="add-btn" type="submit" value="Новый тест-ран" />
-              </div>
-              <div class="content">
-                  {% for test_run in test_runs %}
-                      <div class="card">
-                          <span class="card-title">Тест ран {{ test_run.id }}</span>
-                      </div>
-                  {% endfor %}
+                <span class="title">{{ release.name }}</span>
+                <div class="section-description">
+                    Описание релиза:
+                    <span class="description-text">{{ release.description }}</span>
+                </div>
+                <div class="btns">
+                    <input class="add-btn" type="submit" value="Новый тест-ран" />
+                </div>
+                <div class="content">
+                    {% for test_run in test_runs %}
+                        <div class="card">
+                            <span class="card-title">Тест ран {{ test_run.id }}</span>
+                            <div class="tester-title">Тестировщик: <span class="tester-name">{{ test_run.testRunner.name }}</span></div>
+                            <div class="progress-title">
+                                <span class="test-number">Общее кол-во тестов {{ test_run.num_of_test }}</span>
+                                <span class="success-number">Пройдено тестов: {{ test_run.successfull_test }}</span>
+                                <span class="fail-number">Провалено тестов: {{ test_run.failed_test }}</span>
+                                <span class="danger-number">Не проверялось тестов: {{ test_run.not_run }}</span>
+                            </div>
+                            <div class="card-content">
+                                <div class="tester-title">Создатель: <span class="tester-name">{{ test_run.creator.name }}</span></div>
+                                <a class="card-content-link" href="#">Перейти</a>
+                              </div>
 
-                <div class="card">
-                  <span class="card-title">Тест_ран_1</span>
+
+                            <span class="card-title">Тест ран {{ test_run.id }}</span>
+                        </div>
+                    {% endfor %}
                 </div>
-                <div class="card">
-                  <span class="card-title">Тест_ран_2</span>
-                </div>
-              </div>
             </section>
           </div>
     </main>
 {% endblock %}
+
+{% block hidden %}
+    <div class="modal create-test-run">
+        <div class="modal-dialog">
+            <div class="modal-header">
+                <h3 class="modal-title">Новый тест-ран</h3>
+                <button class="close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="release_id" value="{{ release.id }}">
+{#                <input class="modal-input" type="text" placeholder="имя тест-рана">#}
+{#                <input class="modal-input" type="text" placeholder="описание тест-рана">#}
+                <input class="modal-input" id="test_runner" type="username" placeholder="исполнитель тест-рана">
+            </div>
+            <div class="modal-footer">
+                <button class="modal-button" type="submit" onclick="CreateTestRun()">Создать</button>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+
