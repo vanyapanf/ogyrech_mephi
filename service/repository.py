@@ -126,3 +126,13 @@ class ProjectRepository:
             return test_case_results.get(testCase=case)
         except TestCaseResult.DoesNotExist:
             return None
+
+    @staticmethod
+    def update_test_successful_status(test_run_result: TestRunResult, successful, failed):
+        TestRunResult.objects.filter(
+            testRun=test_run_result.testRun,
+            testPlan=test_run_result.testPlan
+        ).update(
+            successfulTestes=successful,
+            failedTestes=failed
+        )

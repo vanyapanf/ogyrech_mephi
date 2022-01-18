@@ -1,6 +1,7 @@
 import json
 import jsonpickle
-from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth.decorators import login_required, user_passes_test
+from django.core.exceptions import PermissionDenied
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
@@ -38,6 +39,29 @@ def redirect_dec(function, page_to):
         function(request, *args, **kwargs)
         return redirect(page_to)
     return _function
+
+
+def permission_required(perm, login_url=None, raise_exception=False):
+    """
+    Decorator for views that checks whether a user has a particular permission
+    enabled, redirecting to the log-in page if necessary.
+    If the raise_exception parameter is given the PermissionDenied exception
+    is raised.
+    """
+    def check_perms(user):
+        if isinstance(perm, str):
+            perms = (perm,)
+        else:
+            perms = perm
+        permissions = ProjectService.find_user_permissions(user)
+        if all(elem in permissions for elem in perms):
+            return True
+        # In case the 403 handler should be called raise the exception
+        if raise_exception:
+            raise PermissionDenied
+        # As the last resort, show the login form
+        return False
+    return user_passes_test(check_perms, login_url=login_url)
 
 
 @csrf_exempt

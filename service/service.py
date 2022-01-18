@@ -168,7 +168,33 @@ class ProjectService:
                     real_result=real_result,
                     status=status
                 )
+                if status:
+                    successful = test_run_result.successfulTestes+1
+                    failed = test_run_result.failedTestes
+                else:
+                    successful = test_run_result.successfulTestes
+                    failed = test_run_result.failedTestes+1
+                DB.update_test_successful_status(
+                    test_run_result=test_run_result,
+                    successful=successful,
+                    failed=failed
+                )
             else:
                 raise PermissionError
         except TestCase.DoesNotExist:
             raise FileNotFoundError
+
+    @staticmethod
+    def find_user_permissions(user: User):
+        groups = user.groups.all()
+        permissions = []
+        for group in groups:
+            g_permissions = list(group.permissions.all())
+            for p in g_permissions:
+                permissions.append(p.codename)
+        u_permissions = list(user.user_permissions.all())
+
+        for p in u_permissions:
+            permissions.append(p.codename)
+
+        return set(permissions)
