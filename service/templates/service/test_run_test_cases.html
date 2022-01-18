@@ -19,17 +19,29 @@
                             <div class="card-title">
                                 <span class="card-name">Тест кейс {{ test_case.id }}</span>
                                 <span class="result-emoji">🥒</span>
+                                {% if test_case.isFinished %}
+                                    {% if test_case.isSuccessful %}
+                                        <span class="result">ТЕСТ ВЫПОЛНЕН УСПЕШНО</span>
+                                    {% else %}
+                                        <span class="result">ТЕСТ ПРОВАЛЕН</span>
+                                    {% endif %}
+                                {% endif %}
                             </div>
                             <div class="card-content">
+                                <div type="hidden" id="test_case_id" style="display: none;">{{ test_case.id }}</div>
                                 <span class="card-content-title">Описание тест-кейса:</span>
                                 <span class="card-content-info">{{ test_case.description }}</span>
                                 <span class="result">Ожидаемый результат: {{ test_case.expectedResult }}</span>
-                                <input class="card-input" id='real_result' type="text" placeholder="Полученный результат">
-                                <div type="hidden" id="test_case_id" style="display: none;">{{ test_case.id }}</div>
-                                <div class="card-content-btns">
-                                    <button class="card-btn" onclick="SuccessfulCase()">Тест пройден 😀</button>
-                                    <button class="card-btn" onclick="FailedCase()">Тест провален 🙁</button>
-                                </div>
+                                {% if test_case.isFinished %}
+                                    <span class="result">Полученный результат: {{ test_case.result.realResult }}</span>
+                                {% else %}
+
+                                    <input class="card-input" id='real-result-{{ test_case.id }}' type="text" placeholder="Полученный результат">
+                                    <div class="card-content-btns">
+                                        <button class="card-btn" onclick="SuccessfulCase()">Тест пройден 😀</button>
+                                        <button class="card-btn" onclick="FailedCase()">Тест провален 🙁</button>
+                                    </div>
+                                {% endif %}
                             </div>
                         </div>
                     {% endfor %}

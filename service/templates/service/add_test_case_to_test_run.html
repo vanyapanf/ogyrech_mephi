@@ -6,9 +6,13 @@
         <div class="wrapper">
             {% include 'include/side-menu.html' %}
             <section class="testruns content-section">
-                <span class="title">Тест ран {{ test_run.id }}</span>
+                <span class="title">
+                    <a href="{% url 'open_test_run' release_id=release_id testrun_id=testrun_id %}">
+                        Тест ран {{ test_run.id }}
+                    </a>
+                </span>
                 <div class="btns">
-                    <button class="modal-button" type="submit" onclick="AddToTestRun()">Создать</button>
+                    <button class="modal-button" type="submit" onclick="AddToTestRun()">Добавить</button>
                 </div>
                 <div class="content">
                     {% for test_case in test_cases %}

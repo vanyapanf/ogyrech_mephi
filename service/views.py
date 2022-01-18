@@ -224,15 +224,16 @@ def create_test_run(request, project_id: int, release_id: int):
 def open_test_run(request, release_id: int, testrun_id: int):
     if request.method == 'GET':
         user = request.user
-        test_run = ProjectService.get_test_run_by_id(testrun_id)
+        test_run, test_cases = ProjectService.get_test_run_test_cases(release_id=release_id, testrun_id=testrun_id)
         if not user.groups.filter(name='Администратор').exists() and not user.is_superuser:
             if test_run.user != user:
                 data = {'error': 'PermissionError', 'ok': False, 'message': 'Нет прав доступа к станица'}
                 return request, data
+
         data = {'ok': True,
                 'release_id': release_id,
                 'test_run': test_run,
-                'test_cases': list(test_run.testCase.all()),
+                'test_cases': test_cases,
                 'template': TEST_RUNS_TEST_CASES.get_full_name()
                 }
         return request, data
@@ -243,7 +244,7 @@ def open_test_run(request, release_id: int, testrun_id: int):
 @csrf_exempt
 @login_required(login_url='login')
 @permission_required('add_testcaseresult', login_url='login')
-#@return_data_template
+@return_data_template
 def add_test_case_to_test_run(request, release_id: int, testrun_id: int):
     if request.method == 'POST':
         try:
@@ -253,12 +254,22 @@ def add_test_case_to_test_run(request, release_id: int, testrun_id: int):
         try:
 
             ProjectService.add_test_cases_to_test_run(testrun_id, **body)
-            return redirect('open_test_run', release_id=release_id,testrun_id=testrun_id)
+            #return redirect('open_test_run', release_id=release_id,testrun_id=testrun_id)
+            test_cases = ProjectService.find_test_cases_not_included_in_test_run(testrun_id=testrun_id)
+            data = {'ok': True,
+                    'release_id': release_id,
+                    'testrun_id': testrun_id,
+                    'test_cases': test_cases,
+                    'template': f'{ADD_TEST_CASE_TO_TEST_RUN.get_full_name()}'
+                    }
+
+            return request, data
         except ValueError or TypeError:
             data = {'error': 'ValueError', 'ok': False, 'message': 'InvalidBody'}
         except FileExistsError:
             data = {'error': 'FileExistsError', 'ok': False, 'message': 'Project already exist'}
-        return render(request, ERROR.get_html(), context=data)
+        # return render(request, ERROR.get_html(), context=data)
+        return request, data
     else:
         return render(request, ERROR.get_html(), context={'ok': False, 'error': 'InvalidMethod'})
 

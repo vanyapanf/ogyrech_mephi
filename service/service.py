@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 
 from service.models import TestCase
 from service.repository import ProjectRepository as DB
-from service.wrappers import TestRunWrapper
+from service.wrappers import TestRunWrapper, TestCaseWrapper
 
 
 class ProjectService:
@@ -78,7 +78,7 @@ class ProjectService:
     def get_user_test_runs_by_release_id(user, release_id):
         release = DB.find_release_by_id(release_id=release_id)
         if release is not None:
-            test_runs = DB.find_user_test_runs_by_release_id(user=user,release=release)
+            test_runs = DB.find_user_test_runs_by_release_id(user=user, release=release)
             result_test_runs = []
             for test_run in test_runs:
                 result_test_runs.append(TestRunWrapper(test_run, release.testplan))
@@ -104,6 +104,24 @@ class ProjectService:
     @staticmethod
     def get_test_run_by_id(testrun_id):
         return DB.find_test_run_by_id(testrun_id)
+
+    @staticmethod
+    def get_test_run_test_cases(release_id, testrun_id):
+        test_run = ProjectService.get_test_run_by_id(testrun_id=testrun_id)
+        test_run_result = test_run.testrunresult_set.get(testPlan__release_id=release_id)
+        test_cases = test_run.testCase.all()
+        test_case_results = ProjectService.find_test_case_results(
+            test_run=test_run, test_run_result=test_run_result
+        )
+        result = []
+        for case in test_cases:
+            case_result = DB.find_test_case_result(test_case_results=test_case_results, case=case)
+            result.append(TestCaseWrapper(test_case=case, case_result=case_result))
+        return test_run, result
+
+    @staticmethod
+    def find_test_case_results(test_run, test_run_result):
+        return DB.find_test_case_results(test_run=test_run, test_run_result=test_run_result)
 
     @staticmethod
     def find_test_cases_not_included_in_test_run(testrun_id):
@@ -136,7 +154,7 @@ class ProjectService:
     def finish_test_case(user: User, release_id, testrun_id, **kwargs):
         real_result = kwargs.get('real_result')
         test_case_id = int(kwargs.get('test_case_id'))
-        status = bool(kwargs.get('status'))
+        status = kwargs.get('status') == 'True'
 
         try:
             test_run = ProjectService.get_test_run_by_id(testrun_id=testrun_id)
@@ -154,9 +172,3 @@ class ProjectService:
                 raise PermissionError
         except TestCase.DoesNotExist:
             raise FileNotFoundError
-
-
-
-
-
-

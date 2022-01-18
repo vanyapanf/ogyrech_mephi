@@ -1,4 +1,4 @@
-from service.models import TestRun, TestPlan, TestRunResult
+from service.models import TestRun, TestPlan, TestRunResult, TestCase, TestCaseResult
 
 
 class TestRunWrapper:
@@ -17,3 +17,17 @@ class TestRunWrapper:
         except TestRunResult.DoesNotExist:
             raise FileNotFoundError
 
+
+class TestCaseWrapper:
+    def __init__(self, test_case: TestCase, case_result: TestCaseResult):
+        self.id = test_case.id
+        self.description = test_case.description
+        self.expectedResult = test_case.expectedResult
+        if case_result is not None:
+            self.isFinished = True
+            self.result = case_result
+            self.isSuccessful = case_result.isSuccessful
+        else:
+            self.isFinished = False
+            self.result = None
+            self.isSuccessful = None

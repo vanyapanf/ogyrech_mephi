@@ -1,3 +1,5 @@
+from datetime import time, datetime
+
 from service.models import Project, Release, TestCase, TestPlan, TestRun, TestRunResult, TestCaseResult
 from django.contrib.auth.models import User
 
@@ -95,7 +97,8 @@ class ProjectRepository:
             testRun=test_run,
             testRunResult=test_run_result,
             isSuccessful=status,
-            realResult=real_result
+            realResult=real_result,
+            runDate=datetime.now()
         )
 
     @staticmethod
@@ -112,3 +115,14 @@ class ProjectRepository:
     @staticmethod
     def find_test_case_by_id(case_id: int):
         return TestCase.objects.get(id=case_id)
+
+    @staticmethod
+    def find_test_case_results(test_run, test_run_result):
+        return TestCaseResult.objects.filter(testRun=test_run, testRunResult=test_run_result)
+
+    @staticmethod
+    def find_test_case_result(test_case_results, case: TestCase):
+        try:
+            return test_case_results.get(testCase=case)
+        except TestCaseResult.DoesNotExist:
+            return None

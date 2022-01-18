@@ -133,13 +133,13 @@ function AddToTestRun() {
 			$('body').html(data);
 		}
 	});
-	modal.classList.remove('is-open');
-	location.reload()
+	// modal.classList.remove('is-open');
+	// location.reload()
 }
 
 function SuccessfulCase() {
-	var real_result = document.getSelection().focusNode.childNodes.item(3).firstChild.toString()
-	var test_case_id = document.getSelection().focusNode.childNodes.item(9).firstChild.toString()
+	var test_case_id = document.getSelection().focusNode.childNodes.item(1).firstChild.nodeValue
+	var real_result = document.getElementById('real-result-'+test_case_id).value
 	const test_run_id = document.getElementById('test_run_id').value
 
 	console.log(test_run_id)
@@ -158,11 +158,13 @@ function SuccessfulCase() {
 			$('body').html(data);
 		}
 	});
+	modal.classList.remove('is-open');
+	location.reload()
 }
 
 function FailedCase() {
-	var real_result = document.getSelection().focusNode.childNodes.item(8).firstChild
-	var test_case_id = document.getSelection().focusNode.childNodes.item(9).firstChild
+	var test_case_id = document.getSelection().focusNode.childNodes.item(1).firstChild.nodeValue
+	var real_result = document.getElementById('real-result-'+test_case_id).value
 	const test_run_id = document.getElementById('test_run_id').value
 
 	console.log(test_run_id)
@@ -181,5 +183,7 @@ function FailedCase() {
 			$('body').html(data);
 		}
 	});
+	modal.classList.remove('is-open');
+	location.reload()
 }
 
