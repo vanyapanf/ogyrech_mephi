@@ -44,7 +44,7 @@ function CreateProject() {
 		}
 	});
 	modal.classList.remove('is-open');
-	location.reload()
+//	location.reload()
 }
 
 function CreateRelease() {
@@ -66,7 +66,7 @@ function CreateRelease() {
 		}
 	});
 	modal.classList.remove('is-open');
-	location.reload()
+//	location.reload()
 }
 
 function CreateTestRun() {
@@ -85,7 +85,7 @@ function CreateTestRun() {
 		}
 	});
 	modal.classList.remove('is-open');
-	location.reload()
+//	location.reload()
 }
 
 function CreateTestCase() {
@@ -187,3 +187,28 @@ function FailedCase() {
 	location.reload()
 }
 
+
+function BugReport() {
+	var test_case_id = document.getSelection().focusNode
+		.parentNode.parentNode.parentNode
+		.childNodes.item(3).childNodes.item(1).firstChild.nodeValue
+	const test_run_id = document.getElementById('test_run_id').value
+
+	console.log(test_run_id)
+	console.log(test_case_id)
+
+	var status = 'False'
+	$.ajax({
+		url:    	test_run_id+'/bug_report',
+		method:		'POST',
+		cache: 		false,
+		data:   	JSON.stringify({'test_case_id': test_case_id, 'status': status, 'test_run_id': test_run_id}),
+		contentType: 'application/json; charset=utf-8',
+        dataType:	'html',
+		success: function(data) {
+			$('body').html(data);
+		}
+	});
+	modal.classList.remove('is-open');
+	location.reload()
+}

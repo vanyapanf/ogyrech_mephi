@@ -1,6 +1,6 @@
 import json
 import jsonpickle
-from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib.auth.decorators import login_required, user_passes_test, permission_required
 from django.core.exceptions import PermissionDenied
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, redirect
@@ -38,35 +38,13 @@ def redirect_dec(function, page_to):
     def _function(request, *args, **kwargs):
         function(request, *args, **kwargs)
         return redirect(page_to)
+
     return _function
-
-
-def permission_required(perm, login_url=None, raise_exception=False):
-    """
-    Decorator for views that checks whether a user has a particular permission
-    enabled, redirecting to the log-in page if necessary.
-    If the raise_exception parameter is given the PermissionDenied exception
-    is raised.
-    """
-    def check_perms(user):
-        if isinstance(perm, str):
-            perms = (perm,)
-        else:
-            perms = perm
-        permissions = ProjectService.find_user_permissions(user)
-        if all(elem in permissions for elem in perms):
-            return True
-        # In case the 403 handler should be called raise the exception
-        if raise_exception:
-            raise PermissionDenied
-        # As the last resort, show the login form
-        return False
-    return user_passes_test(check_perms, login_url=login_url)
 
 
 @csrf_exempt
 @login_required(login_url='login')
-@permission_required('add_project', login_url='login')
+@permission_required('service.add_project', login_url='login')
 @return_data_template
 def create_project(request: HttpRequest):
     if request.method == 'POST':
@@ -106,7 +84,6 @@ def find_projects(request):
 
 
 @login_required(login_url='login')
-@permission_required('view_release', login_url='login')
 @return_data_template
 def open_project_releases(request, project_id: int):
     if request.method == 'GET':
@@ -123,7 +100,7 @@ def open_project_releases(request, project_id: int):
 
 @csrf_exempt
 @login_required(login_url='login')
-@permission_required('add_release', login_url='login')
+@permission_required('service.add_release', login_url='login')
 @return_data_template
 def create_release(request: HttpRequest):
     if request.method == 'POST':
@@ -150,7 +127,6 @@ def create_release(request: HttpRequest):
 
 
 @login_required(login_url='login')
-@permission_required('view_testcase', login_url='login')
 @return_data_template
 def find_test_cases(request):
     test_cases = ProjectService.find_test_cases()
@@ -161,7 +137,7 @@ def find_test_cases(request):
 
 @csrf_exempt
 @login_required(login_url='login')
-@permission_required('add_testcase', login_url='login')
+@permission_required('service.add_testcase', login_url='login')
 @return_data_template
 def create_test_case(request: HttpRequest):
     if request.method == 'POST':
@@ -188,12 +164,14 @@ def create_test_case(request: HttpRequest):
 
 
 @login_required(login_url='login')
-@permission_required('view_testrun', login_url='login')
 @return_data_template
 def open_release_test_runs(request, project_id: int, release_id: int):
     if request.method == 'GET':
         user = request.user
-        if user.groups.filter(name='Администратор').exists() or user.is_superuser:
+        all_permissions = ProjectService.find_user_permissions(user=user)
+        if user.groups.filter(name='Администратор').exists() \
+                or user.is_superuser \
+                or 'add_testrun' in all_permissions:
             release, test_runs = ProjectService.get_test_runs_by_release_id(release_id)
 
         else:
@@ -211,7 +189,7 @@ def open_release_test_runs(request, project_id: int, release_id: int):
 
 @csrf_exempt
 @login_required(login_url='login')
-@permission_required('add_testrun', login_url='login')
+@permission_required('service.add_testrun', login_url='login')
 @return_data_template
 def create_test_run(request, project_id: int, release_id: int):
     if request.method == 'POST':
@@ -222,7 +200,11 @@ def create_test_run(request, project_id: int, release_id: int):
         try:
             ProjectService.create_test_run(request.user, **body)
             user = request.user
-            if user.groups.filter(name='Администратор').exists() or user.is_superuser:
+            all_permissions = ProjectService.find_user_permissions(user=user)
+
+            if user.groups.filter(name='Администратор').exists() \
+                    or user.is_superuser \
+                    or 'add_testrun' in all_permissions:
                 release, test_runs = ProjectService.get_test_runs_by_release_id(release_id)
             else:
                 release, test_runs = ProjectService.get_user_test_runs_by_release_id(user, release_id)
@@ -243,13 +225,15 @@ def create_test_run(request, project_id: int, release_id: int):
 
 
 @login_required(login_url='login')
-@permission_required('view_testrun', login_url='login')
 @return_data_template
 def open_test_run(request, release_id: int, testrun_id: int):
     if request.method == 'GET':
         user = request.user
+        permissions = ProjectService.find_user_permissions(user=user)
         test_run, test_cases = ProjectService.get_test_run_test_cases(release_id=release_id, testrun_id=testrun_id)
-        if not user.groups.filter(name='Администратор').exists() and not user.is_superuser:
+        if not user.groups.filter(name='Администратор').exists() \
+                and not user.is_superuser \
+                and 'add_testrun' not in permissions:
             if test_run.user != user:
                 data = {'error': 'PermissionError', 'ok': False, 'message': 'Нет прав доступа к станица'}
                 return request, data
@@ -267,7 +251,7 @@ def open_test_run(request, release_id: int, testrun_id: int):
 
 @csrf_exempt
 @login_required(login_url='login')
-@permission_required('add_testcaseresult', login_url='login')
+@permission_required('service.add_testcaseresult', login_url='login')
 @return_data_template
 def add_test_case_to_test_run(request, release_id: int, testrun_id: int):
     if request.method == 'POST':
@@ -278,7 +262,6 @@ def add_test_case_to_test_run(request, release_id: int, testrun_id: int):
         try:
 
             ProjectService.add_test_cases_to_test_run(testrun_id, **body)
-            #return redirect('open_test_run', release_id=release_id,testrun_id=testrun_id)
             test_cases = ProjectService.find_test_cases_not_included_in_test_run(testrun_id=testrun_id)
             data = {'ok': True,
                     'release_id': release_id,
@@ -299,7 +282,6 @@ def add_test_case_to_test_run(request, release_id: int, testrun_id: int):
 
 
 @login_required(login_url='login')
-@permission_required('add_testcaseresult', login_url='login')
 @return_data_template
 def get_test_run_test_cases(request, release_id: int, testrun_id: int):
     if request.method == 'GET':
@@ -317,7 +299,7 @@ def get_test_run_test_cases(request, release_id: int, testrun_id: int):
 
 @csrf_exempt
 @login_required(login_url='login')
-@permission_required('add_testcaseresult', login_url='login')
+@permission_required('service.add_testcaseresult', login_url='login')
 # @return_data_template
 def finish_test_case(request, release_id: int, testrun_id: int):
     if request.method == 'POST':
@@ -328,6 +310,53 @@ def finish_test_case(request, release_id: int, testrun_id: int):
         try:
             ProjectService.finish_test_case(request.user, release_id, testrun_id, **body)
             return redirect('open_test_run', release_id=release_id, testrun_id=testrun_id)
+        except ValueError or TypeError:
+            data = {'error': 'ValueError', 'ok': False, 'message': 'InvalidBody'}
+            return request, data
+        except FileExistsError:
+            data = {'error': 'FileExistsError', 'ok': False, 'message': 'Project already exist'}
+            return render(request, ERROR.get_html(), context=data)
+    else:
+        return render(request, ERROR.get_html(), context={'ok': False, 'error': 'InvalidMethod'})
+
+
+@csrf_exempt
+@return_data
+def create_release_from_json(request):
+    if request.method == 'POST':
+        try:
+            body = body_to_dict(request.body.decode('utf-8'))
+        except json.decoder.JSONDecodeError:
+            return {'ok': False, 'error': 'InvalidBody'}
+        try:
+            release = ProjectService.create_release(**body)
+        except ValueError or TypeError:
+            data = {'error': 'ValueError', 'ok': False, 'message': 'InvalidBody'}
+        except FileExistsError:
+            data = {'error': 'FileExistsError', 'ok': False, 'message': 'Project already exist'}
+        except FileNotFoundError:
+            data = {'error': 'FileNotFoundError', 'ok': False, 'message': 'Проект не найден'}
+        else:
+            data = {'ok': True,
+                    'project': release.project_id,
+                    'release': release.id
+                    }
+        return data
+    else:
+        return {'ok': False, 'error': 'InvalidMethod'}
+
+@csrf_exempt
+@login_required(login_url='login')
+@permission_required('service.add_testcaseresult', login_url='login')
+def bug_report(request, release_id: int, testrun_id: int):
+    if request.method == 'POST':
+        try:
+            body = body_to_dict(request.body.decode('utf-8'))
+        except json.decoder.JSONDecodeError:
+            return request, {'ok': False, 'error': 'InvalidBody'}
+        try:
+            ProjectService.bug_report(request.user, release_id, testrun_id, **body)
+            return redirect(release_id=release_id, testrun_id=testrun_id)
         except ValueError or TypeError:
             data = {'error': 'ValueError', 'ok': False, 'message': 'InvalidBody'}
             return request, data

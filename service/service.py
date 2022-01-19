@@ -1,11 +1,16 @@
 import json
+import requests
 
 from django.contrib.auth.models import User
+from django.http import HttpRequest
 
-from service.models import TestCase
+from service.models import TestCase, TaskSystem
 from service.repository import ProjectRepository as DB
 from service.wrappers import TestRunWrapper, TestCaseWrapper
 
+
+def body_to_dict(body: HttpRequest.body) -> dict or list:
+    return json.loads(body)
 
 class ProjectService:
     @staticmethod
@@ -198,3 +203,28 @@ class ProjectService:
             permissions.append(p.codename)
 
         return set(permissions)
+
+    @staticmethod
+    def bug_report(user, release_id, testrun_id, **kwargs):
+        test_case_id = int(kwargs.get('test_case_id'))
+        url = TaskSystem.objects.first()
+        test_run = ProjectService.get_test_run_by_id(testrun_id=testrun_id)
+        test_plan = test_run.testPlan
+        test_run_result = test_run.testrunresult_set.get(testPlan=test_plan)
+        test_case = test_run.testCase.get(id=test_case_id)
+        test_case_result = ProjectService.find_test_case_results(test_run=test_run, test_run_result=test_run_result).get(testCase=test_case)
+
+        data = {
+            'release_id': release_id,
+            'testrun_id': testrun_id,
+            'runner': user.username,
+            'description': test_case.description,
+            'expectedResult': test_case.expectedResult,
+            'realResult': test_case_result.realResult,
+            'isSuccessful': test_case_result.isSuccessful,
+            'runDate': test_case_result.runDate
+        }
+
+        response = body_to_dict(requests.post(url=url, data=data).text)
+
+        return int(response.get('ok'))

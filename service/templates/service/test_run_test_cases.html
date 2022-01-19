@@ -11,7 +11,7 @@
                     <div class="add-link">
                         <a href="{% url 'get_test_run_test_cases' release_id=release_id testrun_id=test_run.id %}">Добавить тест кейсы из базы</a>
                     </div>
-                    <input class="add-btn" type="submit" value="Новый тест-ран" />
+                    <input class="add-btn" type="hidden" value="Новый тест-ран" />
                 </div>
                 <div class="content">
                     {% for test_case in test_cases %}
@@ -21,9 +21,9 @@
                                 <span class="result-emoji">🥒</span>
                                 {% if test_case.isFinished %}
                                     {% if test_case.isSuccessful %}
-                                        <span class="result">ТЕСТ ВЫПОЛНЕН УСПЕШНО</span>
+                                        <span class="result">😀</span>
                                     {% else %}
-                                        <span class="result">ТЕСТ ПРОВАЛЕН</span>
+                                        <span class="result">🙁</span>
                                     {% endif %}
                                 {% endif %}
                             </div>
@@ -34,8 +34,10 @@
                                 <span class="result">Ожидаемый результат: {{ test_case.expectedResult }}</span>
                                 {% if test_case.isFinished %}
                                     <span class="result">Полученный результат: {{ test_case.result.realResult }}</span>
+                                    {% if not test_case.isSuccessful %}
+                                        <button class="card-btn" onclick="BugReport()">Bug repport</button>
+                                    {% endif %}
                                 {% else %}
-
                                     <input class="card-input" id='real-result-{{ test_case.id }}' type="text" placeholder="Полученный результат">
                                     <div class="card-content-btns">
                                         <button class="card-btn" onclick="SuccessfulCase()">Тест пройден 😀</button>
