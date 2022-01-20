@@ -14,12 +14,13 @@ close.addEventListener('click', () => {
 })
 
 for (let cardItem of cards) {
-    cardItem.addEventListener('click', () => {
+    cardItem.addEventListener('click', (event) => {
         cardContent = cardItem.querySelector('.card-content');
 
-        if (cardContent.style.display != 'flex') {
+        if (!cardContent.contains(event.target) && cardContent.style.display != 'flex') {
             cardContent.style.display = 'flex';
-        } else {
+        }
+        else if (!cardContent.contains(event.target) && cardContent.style.display == 'flex') {
             cardContent.style.display = 'none';
         }
     })
@@ -42,6 +43,8 @@ function CreateProject() {
 			$('body').html(data);
 		}
 	});
+	modal.classList.remove('is-open');
+//	location.reload()
 }
 
 function CreateRelease() {
@@ -62,6 +65,8 @@ function CreateRelease() {
 			$('body').html(data);
 		}
 	});
+	modal.classList.remove('is-open');
+//	location.reload()
 }
 
 function CreateTestRun() {
@@ -79,6 +84,8 @@ function CreateTestRun() {
 			$('body').html(data);
 		}
 	});
+	modal.classList.remove('is-open');
+//	location.reload()
 }
 
 function CreateTestCase() {
@@ -99,6 +106,109 @@ function CreateTestCase() {
 			$('body').html(data);
 		}
 	});
+	modal.classList.remove('is-open');
+	location.reload()
+}
+
+function AddToTestRun() {
+	var checked = document.getElementsByClassName('checkbox-row');
+	var values = [];
+	for(var i = 0; i < checked.length; i++){
+		if(checked[i].checked){
+			 var case_id = checked[i].getAttribute("value");
+			 values.push(case_id);
+		}
+	}
+	console.log(values)
+	const json_values = JSON.stringify(values);
+
+	$.ajax({
+		url:    	'add_test_case',
+		method:		'POST',
+		cache: 		false,
+		data:   	JSON.stringify({'case_ids': json_values}),
+		contentType: 'application/json; charset=utf-8',
+        dataType:	'html',
+		success: function(data) {
+			$('body').html(data);
+		}
+	});
+	// modal.classList.remove('is-open');
+	// location.reload()
+}
+
+function SuccessfulCase() {
+	var test_case_id = document.getSelection().focusNode.childNodes.item(1).firstChild.nodeValue
+	var real_result = document.getElementById('real-result-'+test_case_id).value
+	const test_run_id = document.getElementById('test_run_id').value
+
+	console.log(test_run_id)
+	console.log(test_case_id)
+	console.log(real_result)
+
+	var status = 'True'
+	$.ajax({
+		url:    	test_run_id+'/finish_test_case',
+		method:		'POST',
+		cache: 		false,
+		data:   	JSON.stringify({'real_result': real_result, 'test_case_id': test_case_id, 'status': status, 'test_run_id': test_run_id}),
+		contentType: 'application/json; charset=utf-8',
+        dataType:	'html',
+		success: function(data) {
+			$('body').html(data);
+		}
+	});
+	modal.classList.remove('is-open');
+	location.reload()
+}
+
+function FailedCase() {
+	var test_case_id = document.getSelection().focusNode.childNodes.item(1).firstChild.nodeValue
+	var real_result = document.getElementById('real-result-'+test_case_id).value
+	const test_run_id = document.getElementById('test_run_id').value
+
+	console.log(test_run_id)
+	console.log(test_case_id)
+	console.log(real_result)
+
+	var status = 'False'
+	$.ajax({
+		url:    	test_run_id+'/finish_test_case',
+		method:		'POST',
+		cache: 		false,
+		data:   	JSON.stringify({'real_result': real_result, 'test_case_id': test_case_id, 'status': status, 'test_run_id': test_run_id}),
+		contentType: 'application/json; charset=utf-8',
+        dataType:	'html',
+		success: function(data) {
+			$('body').html(data);
+		}
+	});
+	modal.classList.remove('is-open');
+	location.reload()
 }
 
 
+function BugReport() {
+	var test_case_id = document.getSelection().focusNode
+		.parentNode.parentNode.parentNode
+		.childNodes.item(3).childNodes.item(1).firstChild.nodeValue
+	const test_run_id = document.getElementById('test_run_id').value
+
+	console.log(test_run_id)
+	console.log(test_case_id)
+
+	var status = 'False'
+	$.ajax({
+		url:    	test_run_id+'/bug_report',
+		method:		'POST',
+		cache: 		false,
+		data:   	JSON.stringify({'test_case_id': test_case_id, 'status': status, 'test_run_id': test_run_id}),
+		contentType: 'application/json; charset=utf-8',
+        dataType:	'html',
+		success: function(data) {
+			$('body').html(data);
+		}
+	});
+	modal.classList.remove('is-open');
+	location.reload()
+}

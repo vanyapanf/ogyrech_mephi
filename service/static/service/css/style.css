@@ -220,6 +220,15 @@ body {
     color: #000000;
 }
 
+.add-link {
+    background-color: #00fa9a;
+    border-radius: 20px;
+    padding: 16px 30px;
+    text-decoration: none;
+    border: none;
+    color: #000000;
+}
+
 .title {
     font-size: 250%;
     align-self: center;

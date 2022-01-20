@@ -14,12 +14,13 @@ close.addEventListener('click', () => {
 })
 
 for (let cardItem of cards) {
-    cardItem.addEventListener('click', () => {
+    cardItem.addEventListener('click', (event) => {
         cardContent = cardItem.querySelector('.card-content');
 
-        if (cardContent.style.display != 'flex') { 
+        if (!cardContent.contains(event.target) && cardContent.style.display != 'flex') { 
             cardContent.style.display = 'flex';
-        } else { 
+        } 
+        else if (!cardContent.contains(event.target) && cardContent.style.display == 'flex') { 
             cardContent.style.display = 'none'; 
         }
     })

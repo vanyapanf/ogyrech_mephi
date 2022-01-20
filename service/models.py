@@ -46,3 +46,7 @@ class TestCaseResult(models.Model):
     isSuccessful = models.BooleanField()
     runDate = models.DateTimeField()
     realResult = models.CharField(max_length=200)
+
+
+class TaskSystem(models.Model):
+    hostName = models.CharField(max_length=200, unique=True)

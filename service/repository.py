@@ -1,4 +1,6 @@
-from service.models import Project, Release, TestCase, TestPlan, TestRun, TestRunResult
+from datetime import time, datetime
+
+from service.models import Project, Release, TestCase, TestPlan, TestRun, TestRunResult, TestCaseResult
 from django.contrib.auth.models import User
 
 
@@ -88,3 +90,49 @@ class ProjectRepository:
     def create_test_run_result(test_plan, test_run):
         return TestRunResult.objects.create(testPlan=test_plan, testRun=test_run)
 
+    @staticmethod
+    def create_test_case_result(test_case: TestCase, test_run: TestRun, test_run_result: TestRunResult, real_result, status):
+        TestCaseResult.objects.create(
+            testCase=test_case,
+            testRun=test_run,
+            testRunResult=test_run_result,
+            isSuccessful=status,
+            realResult=real_result,
+            runDate=datetime.now()
+        )
+
+    @staticmethod
+    def find_test_run_by_id(testrun_id):
+        try:
+            return TestRun.objects.get(id=testrun_id)
+        except TestRun.DoesNotExist:
+            raise FileNotFoundError
+
+    @staticmethod
+    def add_test_cases_to_test_run(testrun, case):
+        testrun.testCase.add(case)
+
+    @staticmethod
+    def find_test_case_by_id(case_id: int):
+        return TestCase.objects.get(id=case_id)
+
+    @staticmethod
+    def find_test_case_results(test_run, test_run_result):
+        return TestCaseResult.objects.filter(testRun=test_run, testRunResult=test_run_result)
+
+    @staticmethod
+    def find_test_case_result(test_case_results, case: TestCase):
+        try:
+            return test_case_results.get(testCase=case)
+        except TestCaseResult.DoesNotExist:
+            return None
+
+    @staticmethod
+    def update_test_successful_status(test_run_result: TestRunResult, successful, failed):
+        TestRunResult.objects.filter(
+            testRun=test_run_result.testRun,
+            testPlan=test_run_result.testPlan
+        ).update(
+            successfulTestes=successful,
+            failedTestes=failed
+        )

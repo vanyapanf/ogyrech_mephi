@@ -1,6 +1,16 @@
-from service.repository import ProjectRepository as DB
-from service.wrappers import TestRunWrapper
+import json
+import requests
 
+from django.contrib.auth.models import User
+from django.http import HttpRequest
+
+from service.models import TestCase, TaskSystem
+from service.repository import ProjectRepository as DB
+from service.wrappers import TestRunWrapper, TestCaseWrapper
+
+
+def body_to_dict(body: HttpRequest.body) -> dict or list:
+    return json.loads(body)
 
 class ProjectService:
     @staticmethod
@@ -73,7 +83,11 @@ class ProjectService:
     def get_user_test_runs_by_release_id(user, release_id):
         release = DB.find_release_by_id(release_id=release_id)
         if release is not None:
-            return release, DB.find_user_test_runs_by_release_id(user=user,release=release)
+            test_runs = DB.find_user_test_runs_by_release_id(user=user, release=release)
+            result_test_runs = []
+            for test_run in test_runs:
+                result_test_runs.append(TestRunWrapper(test_run, release.testplan))
+            return release, result_test_runs
         else:
             raise FileNotFoundError
 
@@ -91,3 +105,126 @@ class ProjectService:
             DB.create_test_run_result(test_plan=release.testplan, test_run=test_run)
         else:
             raise FileNotFoundError
+
+    @staticmethod
+    def get_test_run_by_id(testrun_id):
+        return DB.find_test_run_by_id(testrun_id)
+
+    @staticmethod
+    def get_test_run_test_cases(release_id, testrun_id):
+        test_run = ProjectService.get_test_run_by_id(testrun_id=testrun_id)
+        test_run_result = test_run.testrunresult_set.get(testPlan__release_id=release_id)
+        test_cases = test_run.testCase.all()
+        test_case_results = ProjectService.find_test_case_results(
+            test_run=test_run, test_run_result=test_run_result
+        )
+        result = []
+        for case in test_cases:
+            case_result = DB.find_test_case_result(test_case_results=test_case_results, case=case)
+            result.append(TestCaseWrapper(test_case=case, case_result=case_result))
+        return test_run, result
+
+    @staticmethod
+    def find_test_case_results(test_run, test_run_result):
+        return DB.find_test_case_results(test_run=test_run, test_run_result=test_run_result)
+
+    @staticmethod
+    def find_test_cases_not_included_in_test_run(testrun_id):
+        test_run_cases = list(ProjectService.get_test_run_by_id(testrun_id=testrun_id).testCase.all())
+        test_run_map = {test_run_cases[i].id: test_run_cases[i] for i in range(0, len(test_run_cases))}
+
+        test_cases = ProjectService.find_test_cases()
+
+        result_test_cases = []
+        for test_case in test_cases:
+            if test_case['id'] not in test_run_map:
+                result_test_cases.append(test_case)
+
+        return result_test_cases
+
+    @staticmethod
+    def add_test_cases_to_test_run(testrun_id, **kwargs):
+        cases = json.loads(kwargs.get('case_ids'))
+        testrun = ProjectService.get_test_run_by_id(testrun_id=testrun_id)
+
+        for case_id in cases:
+            test_case = ProjectService.find_test_case_by_id(case_id)
+            DB.add_test_cases_to_test_run(testrun, test_case)
+
+    @staticmethod
+    def find_test_case_by_id(case_id: int):
+        return DB.find_test_case_by_id(case_id)
+
+    @staticmethod
+    def finish_test_case(user: User, release_id, testrun_id, **kwargs):
+        real_result = kwargs.get('real_result')
+        test_case_id = int(kwargs.get('test_case_id'))
+        status = kwargs.get('status') == 'True'
+
+        try:
+            test_run = ProjectService.get_test_run_by_id(testrun_id=testrun_id)
+            if test_run.user.username == user.username:
+                test_case = test_run.testCase.get(id=test_case_id)
+                test_run_result = test_run.testrunresult_set.get(testPlan__release_id=release_id)
+                DB.create_test_case_result(
+                    test_case=test_case,
+                    test_run=test_run,
+                    test_run_result=test_run_result,
+                    real_result=real_result,
+                    status=status
+                )
+                if status:
+                    successful = test_run_result.successfulTestes+1
+                    failed = test_run_result.failedTestes
+                else:
+                    successful = test_run_result.successfulTestes
+                    failed = test_run_result.failedTestes+1
+                DB.update_test_successful_status(
+                    test_run_result=test_run_result,
+                    successful=successful,
+                    failed=failed
+                )
+            else:
+                raise PermissionError
+        except TestCase.DoesNotExist:
+            raise FileNotFoundError
+
+    @staticmethod
+    def find_user_permissions(user: User):
+        groups = user.groups.all()
+        permissions = []
+        for group in groups:
+            g_permissions = list(group.permissions.all())
+            for p in g_permissions:
+                permissions.append(p.codename)
+        u_permissions = list(user.user_permissions.all())
+
+        for p in u_permissions:
+            permissions.append(p.codename)
+
+        return set(permissions)
+
+    @staticmethod
+    def bug_report(user, release_id, testrun_id, **kwargs):
+        test_case_id = int(kwargs.get('test_case_id'))
+        url = TaskSystem.objects.first()
+        test_run = ProjectService.get_test_run_by_id(testrun_id=testrun_id)
+        test_plan = test_run.testPlan
+        test_run_result = test_run.testrunresult_set.get(testPlan=test_plan)
+        test_case = test_run.testCase.get(id=test_case_id)
+        test_case_result = ProjectService.find_test_case_results(test_run=test_run, test_run_result=test_run_result).get(testCase=test_case)
+
+        data = {
+            'release_id': release_id,
+            'testrun_id': testrun_id,
+            'runner': user.username,
+            'description': test_case.description,
+            'expectedResult': test_case.expectedResult,
+            'realResult': test_case_result.realResult,
+            'isSuccessful': test_case_result.isSuccessful,
+            'runDate': test_case_result.runDate
+        }
+
+        response = body_to_dict(requests.post(url=url, data=data).text)
+
+        return int(response.get('ok'))
