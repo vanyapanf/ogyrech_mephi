@@ -1,4 +1,6 @@
 import json
+
+import jsonpickle
 import requests
 
 from django.contrib.auth.models import User
@@ -207,7 +209,7 @@ class ProjectService:
     @staticmethod
     def bug_report(user, release_id, testrun_id, **kwargs):
         test_case_id = int(kwargs.get('test_case_id'))
-        url = TaskSystem.objects.first()
+        url = TaskSystem.objects.first().hostName
         test_run = ProjectService.get_test_run_by_id(testrun_id=testrun_id)
         test_plan = test_run.testPlan
         test_run_result = test_run.testrunresult_set.get(testPlan=test_plan)
@@ -225,6 +227,8 @@ class ProjectService:
             'runDate': test_case_result.runDate
         }
 
-        response = body_to_dict(requests.post(url=url, data=data).text)
+        json_data = jsonpickle.encode(data, unpicklable=False)
+        rsp = requests.post(url=url, data=json_data).text
+        response = body_to_dict(rsp)
 
         return int(response.get('ok'))
