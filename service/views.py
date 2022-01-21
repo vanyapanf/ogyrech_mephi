@@ -356,7 +356,7 @@ def bug_report(request, release_id: int, testrun_id: int):
             return request, {'ok': False, 'error': 'InvalidBody'}
         try:
             ProjectService.bug_report(request.user, release_id, testrun_id, **body)
-            return redirect(release_id=release_id, testrun_id=testrun_id)
+            return redirect('open_test_run', release_id=release_id, testrun_id=testrun_id)
         except ValueError or TypeError:
             data = {'error': 'ValueError', 'ok': False, 'message': 'InvalidBody'}
             return request, data
